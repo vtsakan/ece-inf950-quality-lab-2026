@@ -1,0 +1,13 @@
+title: "ECE_INF950 Ποιότητα Λογισμικού · Εργαστήριο και εργασία"
+description: "Εργασία εξαμήνου StudyRoom, σύστημα αναφοράς foodorder, υποδείγματα παραδοτέων"
+lang: el
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
+exclude:
+  - foodorder/src
+  - foodorder/tests
+  - foodorder/pyproject.toml

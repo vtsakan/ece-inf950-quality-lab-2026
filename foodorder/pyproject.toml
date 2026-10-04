@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "foodorder"
+version = "0.1.0"
+description = "Εκπαιδευτικό σύστημα παραγγελίας φαγητού για το ECE_INF950 Ποιότητα Λογισμικού"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "radon>=6",
+    "ruff>=0.5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "req(id): η απαίτηση που επαληθεύει το test (π.χ. FR-03)",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["foodorder"]
