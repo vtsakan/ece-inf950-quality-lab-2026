@@ -20,8 +20,8 @@
 Χρειάζεστε Python 3.10 ή νεότερη και Git.
 
 ```bash
-git clone https://github.com/vtsakan/ece-inf950-quality-lab.git
-cd ece-inf950-quality-lab/foodorder
+git clone https://github.com/vtsakan/ece-inf950-quality-lab-2026.git
+cd ece-inf950-quality-lab-2026/foodorder
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
