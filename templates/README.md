@@ -8,7 +8,7 @@
 |---|---|---|
 | 1 | `w01_risk_register.md` · Μητρώο κινδύνων ποιότητας | ISO/IEC/IEEE 16085 (διαχείριση κινδύνων στον κύκλο ζωής) · ISO 31000 |
 | 2 | `w02_requirements_spec.md` · Προδιαγραφή απαιτήσεων | ISO/IEC/IEEE 29148 (μηχανική απαιτήσεων) |
-| 3 | `w03_quality_model_and_plan.md` · Μοντέλο ποιότητας και σχέδιο διασφάλισης | ISO/IEC 25010 · ISO/IEC 25030 · IEEE 730 |
+| 3 | `w03_quality_model_and_plan.md` · Μοντέλο ποιότητας και σχέδιο διασφάλισης | ISO/IEC 25010:2023 · 25019 · 25012 · 25030 · IEEE 730 |
 | 4 | `w04_measurement_report.md` · Αναφορά μετρήσεων | ISO/IEC/IEEE 15939 (διεργασία μέτρησης) · ISO/IEC 25023 |
 | 5 | `w05_review_report.md` · Αναφορά review και στατικής ανάλυσης | IEEE 1028 (reviews και audits) |
 | 6 | `w06_test_specification_blackbox.md` · Προδιαγραφή ελέγχου (black-box) | ISO/IEC/IEEE 29119-3 · 29119-4 |

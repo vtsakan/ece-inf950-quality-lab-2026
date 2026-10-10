@@ -2,7 +2,7 @@
 
 Χειμερινό εξάμηνο 2026–27 · Δευτέρα 13:00–17:00 · Πανεπιστήμιο Πελοποννήσου, Τμήμα ΗΜΜΥ
 
-**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 1: προδιαγραφές και ερωτήματα](assignment/week01.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 1](labs/week01/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 1](labs/week01/SOLVED.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
+**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 3: προδιαγραφές και ερωτήματα](assignment/week03.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 3](labs/week03/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 3](labs/week03/SOLVED.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
 
 
 ## Πώς λειτουργεί το εργαστήριο
@@ -72,7 +72,7 @@ pytest
 ## Δομή του αποθετηρίου μαθήματος
 
 ```
-ece-inf950-quality-lab/
+ece-inf950-quality-lab-2026/
 ├── README.md            αυτός ο οδηγός
 ├── assignment/          η εργασία StudyRoom: προδιαγραφές και ερωτήματα ανά εβδομάδα, κείμενο σε Word
 ├── foodorder/           το σύστημα αναφοράς για τα λυμένα παραδείγματα
