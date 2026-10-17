@@ -2,7 +2,7 @@
 
 Χειμερινό εξάμηνο 2026–27 · Δευτέρα 13:00–17:00 · Πανεπιστήμιο Πελοποννήσου, Τμήμα ΗΜΜΥ
 
-**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 3: προδιαγραφές και ερωτήματα](assignment/week03.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 3](labs/week03/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 3](labs/week03/SOLVED.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
+**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 4: προδιαγραφές και ερωτήματα](assignment/week04.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 4](labs/week04/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 4](labs/week04/SOLVED.md) · [Κώδικας StudyRoom 0.1](studyroom/README.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
 
 
 ## Πώς λειτουργεί το εργαστήριο
@@ -19,16 +19,41 @@
 
 Χρειάζεστε Python 3.10 ή νεότερη και Git.
 
+### Εικονικό περιβάλλον Python (venv)
+
+Όλα τα εργαλεία του μαθήματος (pytest, radon, ruff κ.ά.) εγκαθίστανται σε **εικονικό περιβάλλον** (virtual environment, venv) και όχι στην Python του συστήματος. Υπάρχουν δύο λόγοι:
+
+- Σε Ubuntu, Debian και macOS με Homebrew, το `pip install` έξω από venv αποτυγχάνει με το μήνυμα `externally-managed-environment`, ή το `python3 -m pytest` απαντά `No module named pytest`.
+- Με το venv όλοι στην ομάδα δουλεύουν με τις ίδιες εκδόσεις εργαλείων. Αυτό χρειάζεται για να αναπαράγονται οι μετρήσεις της Εβδομάδας 4.
+
+Φτιάχνετε **ένα venv στη ρίζα κάθε αποθετηρίου**: ένα στο αποθετήριο του μαθήματος και ένα στο αποθετήριο της ομάδας σας. Ο φάκελος `.venv/` εξαιρείται από το Git μέσω του `.gitignore` και δεν ανεβαίνει ποτέ.
+
 ```bash
 git clone https://github.com/vtsakan/ece-inf950-quality-lab-2026.git
-cd ece-inf950-quality-lab-2026/foodorder
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -e ".[dev]"
-pytest
+cd ece-inf950-quality-lab-2026
+python3 -m venv .venv                 # Windows: py -m venv .venv
+source .venv/bin/activate             # Windows PowerShell: .venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -e "./foodorder[dev]"
+cd foodorder && python -m pytest && cd ..
 ```
 
-Αν η τελευταία εντολή τυπώσει `3 passed`, το περιβάλλον είναι έτοιμο. Το ίδιο περιβάλλον θα χρησιμοποιήσετε για τον κώδικα του StudyRoom από την Εβδομάδα 4. Τα εργαλεία που εγκαθίστανται είναι pytest, pytest-cov, radon και ruff. Σε επόμενες εβδομάδες θα προστεθούν εργαλεία για API και performance testing.
+Αν η τελευταία εντολή τυπώσει `3 passed`, το περιβάλλον είναι έτοιμο. Τα εργαλεία που εγκαθίστανται είναι pytest, pytest-cov, radon και ruff. Σε επόμενες εβδομάδες θα προστεθούν εργαλεία για API και performance testing.
+
+Τρία πράγματα που μπερδεύουν συχνά:
+
+- **Ενεργοποίηση σε κάθε νέο τερματικό.** Το venv ενεργοποιείται ξανά με `source .venv/bin/activate` από τη ρίζα του αποθετηρίου. Όταν είναι ενεργό, η γραμμή εντολών ξεκινά με `(.venv)`. Αν δείτε `No module named pytest` ή `radon: command not found`, το πιθανότερο είναι ότι ξεχάσατε την ενεργοποίηση.
+- **Ubuntu και Debian.** Αν το `python3 -m venv` αποτύχει με μήνυμα για `ensurepip`, εγκαταστήστε πρώτα το πακέτο: `sudo apt install python3-venv`.
+- **Windows.** Αν το PowerShell αρνηθεί να τρέξει το `Activate.ps1`, δώστε μία φορά `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`. Εναλλακτικά χρησιμοποιήστε το `cmd` με `.venv\Scripts\activate.bat`.
+
+Για να εγκαταστήσετε το StudyRoom (από την Εβδομάδα 4) στο ίδιο venv:
+
+```bash
+pip install -e "./studyroom[dev]" complexipy
+cd studyroom && python -m pytest && cd ..
+```
+
+Στο αποθετήριο της ομάδας σας κάνετε τα ίδια: δικό του `.venv` στη ρίζα, και `.venv/` στο `.gitignore`.
 
 ## Πρόγραμμα εργαστηρίου και εργασίας
 
@@ -76,6 +101,7 @@ ece-inf950-quality-lab-2026/
 ├── README.md            αυτός ο οδηγός
 ├── assignment/          η εργασία StudyRoom: προδιαγραφές και ερωτήματα ανά εβδομάδα, κείμενο σε Word
 ├── foodorder/           το σύστημα αναφοράς για τα λυμένα παραδείγματα
+├── studyroom/           ο κώδικας του StudyRoom, όπως τον παραδίδει η ομάδα ανάπτυξης (από την Εβδομάδα 4)
 ├── labs/weekNN/         LAB.md (τι κάνετε) και SOLVED.md (λυμένο παράδειγμα)
 └── templates/           υποδείγματα παραδοτέων ανά εβδομάδα (βάσει προτύπων) και ρουμπρίκες
 ```
