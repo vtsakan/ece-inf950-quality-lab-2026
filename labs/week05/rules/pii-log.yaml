@@ -1,0 +1,13 @@
+rules:
+  - id: no-personal-data-in-logs
+    languages: [python]
+    severity: ERROR
+    message: Προσωπικά δεδομένα ή token σε log (Υ7, NFR-02)
+    patterns:
+      - pattern: $LOG.$M(..., $ARG, ...)
+      - metavariable-regex:
+          metavariable: $LOG
+          regex: ^(log|logger|logging)$
+      - metavariable-regex:
+          metavariable: $ARG
+          regex: .*(email|token|password).*

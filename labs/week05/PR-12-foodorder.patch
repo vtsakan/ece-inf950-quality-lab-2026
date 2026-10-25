@@ -1,0 +1,69 @@
+From d088b293209c5ffa5831279d0da5abc5d98a9189 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=CE=9F=CE=BC=CE=AC=CE=B4=CE=B1=20foodorder?=
+ <dev@foodorder.example>
+Date: Fri, 23 Oct 2026 17:36:28 +0300
+Subject: [PATCH] =?UTF-8?q?PR=20#12:=20=CE=B5=CF=80=CE=B1=CE=BD=CE=AC?=
+ =?UTF-8?q?=CE=BB=CE=B7=CF=88=CE=B7=20=CE=B5=CE=BE=CE=BF=CF=85=CF=83=CE=B9?=
+ =?UTF-8?q?=CE=BF=CE=B4=CF=8C=CF=84=CE=B7=CF=83=CE=B7=CF=82=20=CF=80=CE=BB?=
+ =?UTF-8?q?=CE=B7=CF=81=CF=89=CE=BC=CE=AE=CF=82?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ foodorder/src/foodorder/checkout.py | 11 ++++++++++-
+ foodorder/src/foodorder/pricing.py  |  4 ++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/foodorder/src/foodorder/checkout.py b/foodorder/src/foodorder/checkout.py
+index 84aead5..ee563e9 100644
+--- a/foodorder/src/foodorder/checkout.py
++++ b/foodorder/src/foodorder/checkout.py
+@@ -2,11 +2,14 @@
+ 
+ from __future__ import annotations
+ 
++import logging
+ from datetime import datetime
+ 
+ from . import pricing
+ from .orders import Order
+ 
++log = logging.getLogger(__name__)
++
+ 
+ class EmptyCartError(Exception):
+     pass
+@@ -34,7 +37,13 @@ class CheckoutService:
+             raise RestaurantClosedError(self.restaurant.name)
+ 
+         amount = pricing.total(cart, coupon, now)
+-        result = self.gateway.authorize(amount, card_token)
++        log.info("authorize %s card=%s", amount, card_token)
++        for attempt in range(3):
++            try:
++                result = self.gateway.authorize(amount, card_token)
++                break
++            except Exception:
++                pass
+         if not result.ok:
+             # Το καλάθι διατηρείται ώστε ο χρήστης να δοκιμάσει άλλη κάρτα.
+             raise PaymentDeclinedError(result.reason)
+diff --git a/foodorder/src/foodorder/pricing.py b/foodorder/src/foodorder/pricing.py
+index a379e54..5c680b3 100644
+--- a/foodorder/src/foodorder/pricing.py
++++ b/foodorder/src/foodorder/pricing.py
+@@ -23,6 +23,10 @@ def to_cents(amount: Decimal) -> Decimal:
+     return amount.quantize(CENT, rounding=ROUND_HALF_UP)
+ 
+ 
++def round_eur(x):
++    return Decimal(x).quantize(Decimal("0.01"), ROUND_HALF_UP)
++
++
+ def apply_coupon(subtotal: Decimal, coupon) -> Decimal:
+     coupon = Decimal(str(coupon))
+     if coupon < 0:
+-- 
+2.43.0
+

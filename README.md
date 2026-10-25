@@ -2,7 +2,7 @@
 
 Χειμερινό εξάμηνο 2026–27 · Δευτέρα 13:00–17:00 · Πανεπιστήμιο Πελοποννήσου, Τμήμα ΗΜΜΥ
 
-**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 4: προδιαγραφές και ερωτήματα](assignment/week04.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 4](labs/week04/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 4](labs/week04/SOLVED.md) · [Κώδικας StudyRoom 0.1](studyroom/README.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
+**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 5: προδιαγραφές και ερωτήματα](assignment/week05.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 5](labs/week05/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 5](labs/week05/SOLVED.md) · [Pull request PR-01](pull_requests/PR-01/PR-01.md) · [Κώδικας StudyRoom 0.1](studyroom/README.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
 
 
 ## Πώς λειτουργεί το εργαστήριο
@@ -53,7 +53,7 @@ pip install -e "./studyroom[dev]" complexipy
 cd studyroom && python -m pytest && cd ..
 ```
 
-Στο αποθετήριο της ομάδας σας κάνετε τα ίδια: δικό του `.venv` στη ρίζα, και `.venv/` στο `.gitignore`.
+Στο αποθετήριο της ομάδας σας κάνετε τα ίδια: δικό του `.venv` στη ρίζα. Το `.gitignore` της ομάδας πρέπει να περιέχει τουλάχιστον `.venv/`, `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/` και `*.egg-info/`, ώστε να μη μπαίνουν στα commits αρχεία που παράγουν τα εργαλεία.
 
 ## Πρόγραμμα εργαστηρίου και εργασίας
 
@@ -103,5 +103,6 @@ ece-inf950-quality-lab-2026/
 ├── foodorder/           το σύστημα αναφοράς για τα λυμένα παραδείγματα
 ├── studyroom/           ο κώδικας του StudyRoom, όπως τον παραδίδει η ομάδα ανάπτυξης (από την Εβδομάδα 4)
 ├── labs/weekNN/         LAB.md (τι κάνετε) και SOLVED.md (λυμένο παράδειγμα)
+├── pull_requests/       pull requests της ομάδας ανάπτυξης για review (από την Εβδομάδα 5)
 └── templates/           υποδείγματα παραδοτέων ανά εβδομάδα (βάσει προτύπων) και ρουμπρίκες
 ```

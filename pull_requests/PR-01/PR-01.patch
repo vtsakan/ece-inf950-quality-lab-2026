@@ -1,0 +1,184 @@
+From 5e31dc2da207ab9c4e0f1741e89669f7e5b86569 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=CE=9F=CE=BC=CE=AC=CE=B4=CE=B1=20=CE=B1=CE=BD=CE=AC=CF=80?=
+ =?UTF-8?q?=CF=84=CF=85=CE=BE=CE=B7=CF=82=20StudyRoom?=
+ <dev@studyroom.example>
+Date: Fri, 23 Oct 2026 17:34:19 +0300
+Subject: [PATCH] =?UTF-8?q?PR-01:=20check-in=20=CE=B1=CF=80=CF=8C=20=CF=84?=
+ =?UTF-8?q?=CE=BF=CE=BD=20=CF=80=CE=AC=CE=B3=CE=BA=CE=BF=20=CE=BA=CE=B1?=
+ =?UTF-8?q?=CE=B9=20=CE=B1=CE=BB=CE=BB=CE=B1=CE=B3=CE=AE=20=CE=BC=CE=B5?=
+ =?UTF-8?q?=CE=BB=CF=8E=CE=BD=20=CE=BF=CE=BC=CE=AC=CE=B4=CE=B1=CF=82?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ studyroom/src/studyroom/admin.py  | 17 ++++++----
+ studyroom/src/studyroom/desk.py   | 55 +++++++++++++++++++++++++++++++
+ studyroom/src/studyroom/models.py |  1 +
+ studyroom/src/studyroom/notify.py | 10 ++++++
+ studyroom/tests/test_desk.py      | 23 +++++++++++++
+ 5 files changed, 100 insertions(+), 6 deletions(-)
+ create mode 100644 studyroom/src/studyroom/desk.py
+ create mode 100644 studyroom/tests/test_desk.py
+
+diff --git a/studyroom/src/studyroom/admin.py b/studyroom/src/studyroom/admin.py
+index 530bbf6..81fd8f5 100644
+--- a/studyroom/src/studyroom/admin.py
++++ b/studyroom/src/studyroom/admin.py
+@@ -8,7 +8,7 @@ from __future__ import annotations
+ 
+ from datetime import date, datetime, timedelta
+ 
+-from . import booking, penalties, reports, rules, store
++from . import booking, desk, penalties, reports, rules, store
+ from .models import Room
+ 
+ 
+@@ -37,11 +37,16 @@ def handle(request: dict) -> dict:
+         elif action == "checkin":
+             booking.check_in(request["booking"], user.id)
+             return {"ok": True, "message": "Checked in" if lang == "en" else "Έγινε check-in"}
+-        elif action == "staff_checkin":
+-            if user.role != "staff":
+-                return {"ok": False, "message": "Forbidden" if lang == "en" else "Δεν επιτρέπεται"}
+-            booking.check_in(request["booking"], user.id, by_staff=True)
+-            return {"ok": True, "message": "Checked in by staff" if lang == "en" else "Check-in από υπάλληλο"}
++        elif action == "desk_checkin":
++            at = datetime.fromisoformat(request["at"]) if request.get("at") else None
++            desk.desk_check_in(request["booking"], user.id, request.get("reason", ""), at)
++            return {"ok": True, "message": "Checked in at the desk" if lang == "en" else "Check-in από τον πάγκο"}
++        elif action == "change_members":
++            members = request.get("members", [])
++            if isinstance(members, str):
++                members = [m.strip() for m in members.split(",") if m.strip()]
++            desk.change_members(request["booking"], user.id, members)
++            return {"ok": True, "message": "Members updated" if lang == "en" else "Τα μέλη ενημερώθηκαν"}
+         elif action == "my_bookings":
+             items = [
+                 {"id": b.id, "room": b.room_code, "start": b.start.isoformat(), "hours": b.hours}
+diff --git a/studyroom/src/studyroom/desk.py b/studyroom/src/studyroom/desk.py
+new file mode 100644
+index 0000000..1928828
+--- /dev/null
++++ b/studyroom/src/studyroom/desk.py
+@@ -0,0 +1,55 @@
++"""Ενέργειες του πάγκου της βιβλιοθήκης (Π6 και απαντήσεις της βιβλιοθήκης στο forum).
++
++- Check-in από υπάλληλο όταν το QR της αίθουσας δεν λειτουργεί.
++- Αλλαγή μελών ομαδικής κράτησης από τον φοιτητή που την έκανε.
++"""
++
++from __future__ import annotations
++
++import logging
++from datetime import datetime, timedelta
++
++from . import notify, rules, store
++from .booking import BookingError
++from .models import ACTIVE, CHECKED_IN
++
++log = logging.getLogger(__name__)
++
++
++def desk_check_in(booking_id, staff_id, reason, at=None):
++    """Check-in από τον υπάλληλο του πάγκου, με καταγραφή υπαλλήλου και αιτίας."""
++    when = at or datetime.now()
++    booking = store.get_booking(booking_id)
++    if booking is None:
++        raise BookingError("Δεν βρέθηκε η κράτηση")
++    if booking.status != ACTIVE:
++        raise BookingError("Η κράτηση δεν είναι ενεργή")
++    if when > booking.start + timedelta(minutes=rules.CHECKIN_GRACE_MINUTES):
++        raise BookingError("Έληξε το περιθώριο check-in")
++    student = store.get_student(booking.student_id)
++    booking.status = CHECKED_IN
++    booking.checked_in_at = when
++    booking.checked_in_by = staff_id
++    log.info("desk check-in %s for %s by %s", booking.id, student.email, staff_id)
++    return booking
++
++
++def change_members(booking_id, student_id, members, now=None):
++    """Αλλαγή μελών ομαδικής κράτησης (Σ7, Π5, Δ4)."""
++    now = now or datetime.now()
++    booking = store.get_booking(booking_id)
++    if booking is None or booking.student_id != student_id:
++        raise BookingError("Δεν βρέθηκε η κράτηση")
++    room = store.get_room(booking.room_code)
++    assert len(members) + 1 <= room.capacity, "Η ομάδα ξεπερνά τη χωρητικότητα"
++    if room.capacity == 6 and len(members) + 1 < 3:
++        raise BookingError("Οι αίθουσες 6 ατόμων δίνονται σε ομάδες τουλάχιστον 3 ατόμων")
++    if booking.start < now:
++        raise BookingError("Η κράτηση έχει ήδη ξεκινήσει")
++    booking.members = list(members)
++    try:
++        student = store.get_student(student_id)
++        notify.send_members_changed(student, booking)
++    except Exception:  # noqa: S110
++        pass
++    return booking
+diff --git a/studyroom/src/studyroom/models.py b/studyroom/src/studyroom/models.py
+index 8c1d74a..1672323 100644
+--- a/studyroom/src/studyroom/models.py
++++ b/studyroom/src/studyroom/models.py
+@@ -52,6 +52,7 @@ class Booking:
+     status: str = ACTIVE
+     checked_in_at: datetime | None = None
+     checked_in_by: str | None = None
++    checkin_reason: str | None = None
+     cancelled_at: datetime | None = None
+ 
+     @property
+diff --git a/studyroom/src/studyroom/notify.py b/studyroom/src/studyroom/notify.py
+index 69af5f9..d17b63f 100644
+--- a/studyroom/src/studyroom/notify.py
++++ b/studyroom/src/studyroom/notify.py
+@@ -47,6 +47,16 @@ def send_block_notice(student, cancelled):
+     _send(student.email, subject, body)
+ 
+ 
++def send_members_changed(student, booking):
++    if student.lang == "en":
++        subject = "StudyRoom: group members changed"
++        body = f"Room {booking.room_code}, {booking.start:%d/%m %H:%M}: {', '.join(booking.members)}."
++    else:
++        subject = "StudyRoom: αλλαγή μελών ομάδας"
++        body = f"Αίθουσα {booking.room_code}, {booking.start:%d/%m %H:%M}: {', '.join(booking.members)}."
++    _send(student.email, subject, body)
++
++
+ def send_reminders():
+     """Υπενθύμιση μία ώρα πριν την έναρξη. Καλείται από cron κάθε 10 λεπτά."""
+     now = datetime.now()
+diff --git a/studyroom/tests/test_desk.py b/studyroom/tests/test_desk.py
+new file mode 100644
+index 0000000..015c2d5
+--- /dev/null
++++ b/studyroom/tests/test_desk.py
+@@ -0,0 +1,23 @@
++"""Tests για τις ενέργειες του πάγκου (PR-01)."""
++
++from datetime import datetime
++
++from studyroom import create_booking
++from studyroom.desk import change_members, desk_check_in
++
++
++def test_desk_check_in_sets_status(now):
++    b = create_booking("1001", "Β-1", datetime(2026, 11, 4, 10, 0), 1, now=now)
++    desk_check_in(b.id, "9001", "Χαλασμένο QR", at=datetime(2026, 11, 4, 10, 5))
++    assert b.status == "checked_in"
++
++
++def test_desk_check_in_runs(now):
++    b = create_booking("1002", "Β-2", datetime(2026, 11, 4, 11, 0), 1, now=now)
++    desk_check_in(b.id, "9001", "Χαλασμένο QR", at=datetime(2026, 11, 4, 11, 2))
++
++
++def test_change_members(now):
++    b = create_booking("1001", "Γ-1", datetime(2026, 11, 5, 12, 0), 1, members=["1002", "1003"], now=now)
++    change_members(b.id, "1001", ["1002", "1003", "1004"], now=now)
++    assert len(b.members) == 3
+-- 
+2.43.0
+
