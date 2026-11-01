@@ -2,7 +2,7 @@
 
 Χειμερινό εξάμηνο 2026–27 · Δευτέρα 13:00–17:00 · Πανεπιστήμιο Πελοποννήσου, Τμήμα ΗΜΜΥ
 
-**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 5: προδιαγραφές και ερωτήματα](assignment/week05.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 5](labs/week05/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 5](labs/week05/SOLVED.md) · [Pull request PR-01](pull_requests/PR-01/PR-01.md) · [Κώδικας StudyRoom 0.1](studyroom/README.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
+**Γρήγοροι σύνδεσμοι:** [Εργασία StudyRoom](assignment/README.md) · [Εβδομάδα 6: κανόνες κρατήσεων και ερωτήματα](assignment/week06.md) · [Κείμενο εργασίας σε Word](assignment/StudyRoom_ergasia.docx) · [Εργαστήριο Εβδομάδας 6](labs/week06/LAB.md) · [Λυμένο παράδειγμα Εβδομάδας 6](labs/week06/SOLVED.md) · [Κώδικας StudyRoom 0.1](studyroom/README.md) · [Υποδείγματα παραδοτέων](templates/README.md) · [Ρουμπρίκες](templates/RUBRICS.md) · [Σύστημα αναφοράς foodorder](foodorder/README.md)
 
 
 ## Πώς λειτουργεί το εργαστήριο

@@ -7,3 +7,6 @@ __pycache__/
 .complexipy_cache/
 htmlcov/
 .mypy_cache/
+
+# αντίγραφο του λυμένου παραδείγματος της Εβδομάδας 6 (labs/week06/LAB.md)
+foodorder/tests/test_blackbox_w06.py
