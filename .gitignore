@@ -8,5 +8,6 @@ __pycache__/
 htmlcov/
 .mypy_cache/
 
-# αντίγραφο του λυμένου παραδείγματος της Εβδομάδας 6 (labs/week06/LAB.md)
+# αντίγραφα των λυμένων παραδειγμάτων (labs/week06, labs/week07)
 foodorder/tests/test_blackbox_w06.py
+foodorder/tests/test_whitebox_w07.py
